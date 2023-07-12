@@ -1,23 +1,23 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { date } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { addDoc, collection } from "firebase/firestore";
-import { auth, db } from "../../config/firebase";
+import { db } from "../../config/firebase";
 import { storage } from "../../config/firebase";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { v4 } from "uuid";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function Form() {
   const [imageUpload, setImageUpload] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [error, setError] = useState(null);
   const [progress, setProgress] = useState(null);
+  const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [user] = useAuthState(auth);
   const schema = yup.object().shape({
     title: yup.string().required("Your post should have a title"),
     description: yup.string().required("Your post should have a description"),
@@ -63,9 +63,9 @@ export default function Form() {
     if (imageUrl) {
       await addDoc(postRef, {
         ...data,
-        username: user?.displayName,
-        userId: user?.uid,
-        profile: user?.photoURL,
+        username: currentUser?.displayName,
+        userId: currentUser?.uid,
+        profile: currentUser?.photoURL,
         postImage: imageUrl,
         publishDate: new Date().toLocaleDateString(),
       });
