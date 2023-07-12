@@ -3,7 +3,6 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 const firebaseConfig = {
-  // apiKey: `${process.env.FIREBASE_API_KEY}`,
   apiKey: import.meta.env.VITE_REACT_APP_FB_API_KEY,
   authDomain: "readie-b6f5e.firebaseapp.com",
   projectId: "readie-b6f5e",
