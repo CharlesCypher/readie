@@ -14,6 +14,8 @@ import { v4 } from "uuid";
 export default function Form() {
   const [imageUpload, setImageUpload] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
+  const [error, setError] = useState(null);
+  const [progress, setProgress] = useState(null);
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const schema = yup.object().shape({
@@ -32,18 +34,18 @@ export default function Form() {
       const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
       uploadBytesResumable(imageRef, imageUpload).then(
         (snapshot) => {
-          // let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgress(percentage);
           getDownloadURL(snapshot.ref).then((url) => {
-            console.log(url);
             setImageUrl(url);
           });
         },
         (err) => {
-          console.log(err);
+          setError(err?.message);
         }
       );
     } else {
-      console.log("No image uploaded");
+      setError("No image uploaded");
     }
   };
 
@@ -58,7 +60,6 @@ export default function Form() {
   const postRef = collection(db, "posts");
 
   const createPost = async (data) => {
-    // uploadFile();
     if (imageUrl) {
       await addDoc(postRef, {
         ...data,
@@ -99,18 +100,19 @@ export default function Form() {
         }}
       />
       {imageUrl && <span className="text-green-500 my-2">Image Uploaded</span>}
-
+      {progress && <div className="h-2 bg-green-500" style={{ width: progress + "%" }}></div>}
       <button
-        className="w-full items-center border border-gray-500 rounded-md bg-none px-6 py-2 my-4 text-base cursor-pointer md:hover:bg-gray-950 md:hover:text-white"
+        className="w-full items-center border border-gray-500 rounded-md bg-none px-6 py-2 my-4 text-base cursor-pointer hover:bg-gray-950 hover:text-white"
         onClick={uploadFile}
       >
         Upload image
       </button>
       <input
-        className="w-full items-center border border-gray-500 rounded-md bg-none px-6 py-2 my-4 text-base cursor-pointer md:hover:bg-gray-950 md:hover:text-white"
+        className="w-full items-center border border-gray-500 rounded-md bg-none px-6 py-2 my-4 text-base cursor-pointer hover:bg-gray-950 hover:text-white"
         type="submit"
         value="Post"
       />
+      {error && <p>{error}</p>}
     </form>
   );
 }
