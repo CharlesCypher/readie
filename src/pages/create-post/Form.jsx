@@ -26,21 +26,25 @@ export default function Form() {
     createdOn: date().default(() => new Date()),
   });
 
-  const uploadFile = () => {
-    if (imageUpload == null) return;
-    const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
-    uploadBytesResumable(imageRef, imageUpload).then(
-      (snapshot) => {
-        // let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        getDownloadURL(snapshot.ref).then((url) => {
-          setImageUrl(url);
-          console.log(url);
-        });
-      },
-      (err) => {
-        console.log(err);
-      }
-    );
+  const uploadFile = (e) => {
+    e.preventDefault();
+    if (imageUpload) {
+      const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
+      uploadBytesResumable(imageRef, imageUpload).then(
+        (snapshot) => {
+          // let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          getDownloadURL(snapshot.ref).then((url) => {
+            console.log(url);
+            setImageUrl(url);
+          });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+    } else {
+      console.log("No image uploaded");
+    }
   };
 
   const {
@@ -54,15 +58,17 @@ export default function Form() {
   const postRef = collection(db, "posts");
 
   const createPost = async (data) => {
-    uploadFile();
-    await addDoc(postRef, {
-      ...data,
-      username: user?.displayName,
-      userId: user?.uid,
-      profile: user?.photoURL,
-      postImage: imageUrl,
-      publishDate: new Date().toLocaleDateString(),
-    });
+    // uploadFile();
+    if (imageUrl) {
+      await addDoc(postRef, {
+        ...data,
+        username: user?.displayName,
+        userId: user?.uid,
+        profile: user?.photoURL,
+        postImage: imageUrl,
+        publishDate: new Date().toLocaleDateString(),
+      });
+    }
     navigate("/");
   };
   return (
@@ -75,14 +81,14 @@ export default function Form() {
           placeholder="Title"
           {...register("title")}
         />
-        <span className="text-red-600">{errors.title?.message}</span>
+        <span className="text-red-600">{errors?.title?.message}</span>
         <textarea
           className="resize-y max-h-80 h-52 border border-gray-500 rounded-sm p-3 text-base my-4"
           name="Post"
           placeholder="How do you feel...?"
           {...register("description")}
         ></textarea>
-        <span className="text-red-600">{errors.description?.message}</span>
+        <span className="text-red-600">{errors?.description?.message}</span>
       </div>
       <input
         type="file"
@@ -92,7 +98,14 @@ export default function Form() {
           setImageUpload(event.target.files[0]);
         }}
       />
-      <span></span>
+      {imageUrl && <span className="text-green-500 my-2">Image Uploaded</span>}
+
+      <button
+        className="w-full items-center border border-gray-500 rounded-md bg-none px-6 py-2 my-4 text-base cursor-pointer md:hover:bg-gray-950 md:hover:text-white"
+        onClick={uploadFile}
+      >
+        Upload image
+      </button>
       <input
         className="w-full items-center border border-gray-500 rounded-md bg-none px-6 py-2 my-4 text-base cursor-pointer md:hover:bg-gray-950 md:hover:text-white"
         type="submit"
