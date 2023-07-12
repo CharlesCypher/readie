@@ -1,9 +1,10 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { List, BellSimple, UserCircle, NotePencil, SignIn, SignOut } from "phosphor-react";
+import { List, BellSimple, UserCircle, NotePencil, SignOut } from "phosphor-react";
 import { AuthContext } from "../context/AuthContext";
 import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase";
+import Menu from "./Menu";
 
 export default function NavBar() {
   const { currentUser } = useContext(AuthContext);
@@ -48,6 +49,7 @@ export default function NavBar() {
             {currentUser ? "Sign out" : "Login"}
           </button>
         </div>
+        <Menu isOpen={isOpen} setIsOpen={setIsOpen} />
       </nav>
     </header>
   );
