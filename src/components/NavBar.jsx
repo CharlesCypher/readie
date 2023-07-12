@@ -26,7 +26,7 @@ export default function NavBar() {
             </svg>
           </Link>
         </h2>
-        <div className="hidden md:flex items-center">
+        <div className="flex items-center">
           <BellSimple className="hidden text-3xl" aria-label="notification" />
           {currentUser && <h4 className="hidden md:flex mr-2">{currentUser?.displayName}</h4>}
           {currentUser ? (
@@ -36,13 +36,13 @@ export default function NavBar() {
           )}
           <Link
             to="/createpost"
-            className="w-full flex items-center justify-between border border-gray-500 rounded-lg bg-none px-4 py-2 cursor-pointer md:hover:bg-gray-950 md:hover:text-white"
+            className="hidden w-full md:flex items-center justify-between border border-gray-500 rounded-lg bg-none px-4 py-2 cursor-pointer md:hover:bg-gray-950 md:hover:text-white"
           >
             <NotePencil className="text-2xl mr-2" />
             Write
           </Link>
           <button
-            className="flex items-center border border-gray-500 rounded-lg bg-none px-6 py-2 cursor-pointer md:hover:bg-gray-950 md:hover:text-white"
+            className="hidden md:flex items-center border border-gray-500 rounded-lg bg-none px-6 py-2 cursor-pointer md:hover:bg-gray-950 md:hover:text-white"
             onClick={() => navigate(currentUser ? signOut(auth) : "/login")}
           >
             <SignOut className="text-2xl mr-2" />
