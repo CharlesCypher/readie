@@ -50,7 +50,7 @@ export default function Post({ post }) {
       const data = await getDocs(likeDocs);
       setLikes(data?.docs.map((doc) => ({ userId: doc.data().userId, likeId: doc.id })));
     };
-    return () => getLikes();
+    getLikes();
   }, []);
   return (
     <div className="w-full overflow-hidden first:my-0 first:pt-1 my-4 pt-3 pb-5 px-2 border-b border-gray-400">
