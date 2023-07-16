@@ -12,7 +12,7 @@ function Home() {
       const data = await getDocs(postRef);
       setPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
-    return () => getPosts();
+    getPosts();
   }, []);
 
   return (
