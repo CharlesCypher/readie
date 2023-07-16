@@ -74,9 +74,9 @@ export default function Post({ post }) {
             <ArrowFatUp size={18} className="text-green-600" aria-label="like post" />
           </button>
         )}
-        {likes && <span>Likes:{likes?.length}</span>}
+        {likes && <span>Votes: {likes?.length}</span>}
       </div>
-      {error && <span>{error}</span>}
+      {error && <span className="my-2">{error}</span>}
     </div>
   );
 }
