@@ -74,7 +74,7 @@ export default function Form() {
     navigate("/");
   };
   return (
-    <form className="w-5/12 max-w-full mx-auto" onSubmit={handleSubmit(createPost)}>
+    <form className="w-full max-w-full mx-auto mt-8 px-6 min-h-screen" onSubmit={handleSubmit(createPost)}>
       <div className="flex flex-col w-full">
         <input
           className="border-b border-gray-500 rounded-none p-2 focus:outline-none text-lg my-4"
@@ -100,11 +100,13 @@ export default function Form() {
           setImageUpload(event.target.files[0]);
         }}
       />
-      {imageUrl && <span className="text-green-500 my-2">Image Uploaded</span>}
+      <p className="text-xs my-4">Prompt: Upload images first before posting.</p>
+      {imageUrl && <span className="text-green-500 mb-2">Image Uploaded!</span>}
       {progress && (
-        <>
-          <motion.div className="h-2 bg-green-500" initial={{ width: 0 }} animate={{ width: progress + "%" }}></motion.div> <span>{progress}</span>
-        </>
+        <div className="flex items-center gap-2">
+          <motion.div className="h-2 bg-green-500 rounded-md" initial={{ width: 0 }} animate={{ width: progress + "%" }}></motion.div>{" "}
+          <span className="text-green-500">{progress}%</span>
+        </div>
       )}
       <button
         className="w-full items-center border border-gray-500 rounded-md bg-none px-6 py-2 my-4 text-base cursor-pointer hover:bg-gray-950 hover:text-white"

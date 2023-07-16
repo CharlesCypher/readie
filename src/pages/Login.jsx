@@ -25,14 +25,17 @@ export default function Login() {
   };
   return (
     <div className="text-center min-h-screen py-20">
-      <h2 className="text-center text-2xl mb-4">Login to proceed</h2>
-      <button className="bg-none px-4 py-2 border border-gray-500 rounded-md cursor-pointer" onClick={signInUserWithPopUp}>
-        Sign In with Google
-      </button>
-      <button className="bg-none px-4 py-2 border border-gray-500 rounded-md cursor-pointer" onClick={signOutUser}>
-        Sign Out
-      </button>
-      {error && <p>{error}</p>}
+      <h2 className="text-center text-2xl mb-16">Login to proceed</h2>
+      <div className="flex flex-col items-center gap-4 justify-center mb-4">
+        <button className="bg-none px-4 py-2 border border-gray-500 rounded-md cursor-pointer" onClick={signInUserWithPopUp}>
+          Sign In with Google
+        </button>
+        <button className="bg-none px-4 py-2 border border-gray-500 rounded-md cursor-pointer" onClick={signOutUser}>
+          Sign Out
+        </button>
+      </div>
+
+      {error && <p className="text-red-600">{error}</p>}
     </div>
   );
 }
