@@ -8,6 +8,7 @@ export default function Post({ post }) {
   const { currentUser } = useContext(AuthContext);
   const [likes, setLikes] = useState(null);
   const [error, setError] = useState(null);
+
   const likeRef = collection(db, "likes");
 
   const addLikes = async () => {
@@ -42,16 +43,15 @@ export default function Post({ post }) {
 
   const likeDocs = query(likeRef, where("postId", "==", post?.id));
 
-  const getLikes = async () => {
-    const data = await getDocs(likeDocs);
-    setLikes(data?.docs.map((doc) => ({ userId: doc.data().userId })));
-  };
-
   const userLiked = likes?.find((like) => like.userId === currentUser?.uid);
 
   useEffect(() => {
-    getLikes();
-  });
+    const getLikes = async () => {
+      const data = await getDocs(likeDocs);
+      setLikes(data?.docs.map((doc) => ({ userId: doc.data().userId })));
+    };
+    return () => getLikes();
+  }, []);
   return (
     <div className="w-full overflow-hidden first:my-0 first:pt-1 my-4 pt-3 pb-5 px-2 border-b border-gray-400">
       <div className="flex items-end mb-2">

@@ -13,7 +13,7 @@ export default function NavBar() {
   return (
     <header className="w-full px-4 border-b border-gray-500 lg:px-16">
       <nav className="flex justify-between items-center h-16" role="navigation">
-        <button className="block md:hidden cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+        <button className="block cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
           <List className="text-3xl" />
         </button>
         <h2 className="text-2xl font-bold" aria-label="readie">
@@ -26,31 +26,31 @@ export default function NavBar() {
             </svg>
           </Link>
         </h2>
-        <div className="flex items-center">
+        <div className="flex items-center justify-center gap-4">
           <BellSimple className="hidden text-3xl" aria-label="notification" />
-          {currentUser && <h4 className="hidden md:flex mr-2">{currentUser?.displayName}</h4>}
+          {/* {currentUser && <h4 className="hidden md:flex mr-2">{currentUser?.displayName}</h4>} */}
           {currentUser ? (
-            <img src={currentUser?.photoURL} alt="" width={36} height={36} className="rounded-full" aria-label="user" />
+            <img src={currentUser?.photoURL} alt="" width={36} height={36} className="rounded-full" aria-label={currentUser?.displayName} />
           ) : (
             <UserCircle className="flex text-4xl" aria-label="user" />
           )}
           <Link
             to="/createpost"
-            className="hidden w-full md:flex items-center justify-between border border-gray-500 rounded-lg bg-none px-4 py-2 cursor-pointer md:hover:bg-gray-950 md:hover:text-white"
+            className="hidden md:flex items-center justify-center border border-gray-500 rounded-lg bg-none w-[7rem] py-2 cursor-pointer md:hover:bg-gray-950 md:hover:text-white transition-colors"
           >
             <NotePencil className="text-2xl mr-2" />
             Write
           </Link>
-          <button
-            className="hidden md:flex items-center border border-gray-500 rounded-lg bg-none px-6 py-2 cursor-pointer md:hover:bg-gray-950 md:hover:text-white"
+          {/* <button
+            className="hidden md:flex justify-center items-center border border-gray-500 rounded-lg bg-none w-[9rem] py-2 cursor-pointer md:hover:bg-gray-950 md:hover:text-white transition-colors"
             onClick={() => navigate(currentUser ? signOut(auth) : "/login")}
           >
             <SignOut className="text-2xl mr-2" />
             {currentUser ? "Sign out" : "Login"}
-          </button>
+          </button> */}
         </div>
-        <Menu isOpen={isOpen} setIsOpen={setIsOpen} />
       </nav>
+      <Menu isOpen={isOpen} setIsOpen={setIsOpen} />
     </header>
   );
 }

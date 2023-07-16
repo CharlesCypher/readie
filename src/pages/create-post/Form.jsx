@@ -10,6 +10,7 @@ import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import { v4 } from "uuid";
 import { AuthContext } from "../../context/AuthContext";
+import { motion } from "framer-motion";
 
 export default function Form() {
   const [imageUpload, setImageUpload] = useState(null);
@@ -73,7 +74,7 @@ export default function Form() {
     navigate("/");
   };
   return (
-    <form className="w-11/12 mx-auto" onSubmit={handleSubmit(createPost)}>
+    <form className="w-5/12 max-w-full mx-auto" onSubmit={handleSubmit(createPost)}>
       <div className="flex flex-col w-full">
         <input
           className="border-b border-gray-500 rounded-none p-2 focus:outline-none text-lg my-4"
@@ -100,7 +101,11 @@ export default function Form() {
         }}
       />
       {imageUrl && <span className="text-green-500 my-2">Image Uploaded</span>}
-      {progress && <div className="h-2 bg-green-500" style={{ width: progress + "%" }}></div>}
+      {progress && (
+        <>
+          <motion.div className="h-2 bg-green-500" initial={{ width: 0 }} animate={{ width: progress + "%" }}></motion.div> <span>{progress}</span>
+        </>
+      )}
       <button
         className="w-full items-center border border-gray-500 rounded-md bg-none px-6 py-2 my-4 text-base cursor-pointer hover:bg-gray-950 hover:text-white"
         onClick={uploadFile}
