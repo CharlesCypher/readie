@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, query, where } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { ArrowFatUp, ArrowFatDown } from "phosphor-react";
 
@@ -9,17 +9,17 @@ export default function Post({ post }) {
   const [likes, setLikes] = useState(null);
   const [error, setError] = useState(null);
 
-  const likeRef = collection(db, "likes");
+  const likesRef = collection(db, "likes");
 
   const addLikes = async () => {
     try {
-      await addDoc(likeRef, {
+      const newDoc = await addDoc(likesRef, {
         postId: post?.id,
         userId: currentUser?.uid,
       });
 
       if (currentUser) {
-        setLikes((prev) => (prev ? [...prev, { userId: currentUser?.uid }] : [{ userId: currentUser?.uid }]));
+        setLikes((prev) => (prev ? [...prev, { userId: currentUser?.uid, likeId: newDoc.id }] : [{ userId: currentUser?.uid, likeId: newDoc.id }]));
       }
     } catch (error) {
       setError(error?.message);
@@ -28,27 +28,27 @@ export default function Post({ post }) {
 
   const removeLikes = async () => {
     try {
-      await addDoc(likeRef, {
-        postId: post?.id,
-        userId: currentUser?.uid,
-      });
-
+      const likeToDeleteQuery = query(likesRef, where("postId", "==", post?.id), where("userId", "==", currentUser?.uid));
+      const likeToDeleteData = await getDocs(likeToDeleteQuery);
+      const likeId = likeToDeleteData.docs[0].id;
+      const likeToDelete = doc(db, "likes", likeId);
+      await deleteDoc(likeToDelete);
       if (currentUser) {
-        setLikes((prev) => (prev ? [...prev, { userId: currentUser?.uid }] : [{ userId: currentUser?.uid }]));
+        setLikes((prev) => prev?.filter((like) => like.likeId !== likeId));
       }
     } catch (error) {
       setError(error?.message);
     }
   };
 
-  const likeDocs = query(likeRef, where("postId", "==", post?.id));
+  const likeDocs = query(likesRef, where("postId", "==", post?.id));
 
   const userLiked = likes?.find((like) => like.userId === currentUser?.uid);
 
   useEffect(() => {
     const getLikes = async () => {
       const data = await getDocs(likeDocs);
-      setLikes(data?.docs.map((doc) => ({ userId: doc.data().userId })));
+      setLikes(data?.docs.map((doc) => ({ userId: doc.data().userId, likeId: doc.id })));
     };
     return () => getLikes();
   }, []);
