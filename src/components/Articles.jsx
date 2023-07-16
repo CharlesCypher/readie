@@ -9,7 +9,7 @@ export default function Articles({ posts }) {
           {posts
             ?.sort((a, b) => b.createdOn - a.createdOn)
             .map((post) => (
-              <Post key={post.id} post={post} />
+              <Post key={post?.id} post={post} />
             ))}
         </article>
         <div className="w-full grid">Recents</div>
