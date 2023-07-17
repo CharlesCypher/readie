@@ -74,7 +74,7 @@ export default function Form() {
     navigate("/");
   };
   return (
-    <form className="w-full max-w-full mx-auto mt-8 px-6 min-h-screen" onSubmit={handleSubmit(createPost)}>
+    <form className="w-full max-w-xl mx-auto mt-8 px-6 min-h-screen" onSubmit={handleSubmit(createPost)}>
       <div className="flex flex-col w-full">
         <input
           className="border-b border-gray-500 rounded-none p-2 focus:outline-none text-lg my-4"

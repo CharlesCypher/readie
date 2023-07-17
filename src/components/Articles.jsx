@@ -5,7 +5,7 @@ export default function Articles({ posts }) {
     <>
       <h2 className="text-xl font-semibold bg-black text-white py-3 px-5">Articles</h2>
       <div className="grid container">
-        <article className="p-5 min-h-screen grid">
+        <article className="w-full max-w-md mx-auto p-5 min-h-screen grid">
           {posts
             ?.sort((a, b) => b.createdOn - a.createdOn)
             .map((post) => (
